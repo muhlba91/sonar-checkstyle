@@ -10,6 +10,7 @@
         <property name="checkFormat" value="$1"/>
         <property name="messageFormat" value="$2"/>
     </module>
+    <property name="tabWidth" value="8"/>
 
     <module name="TreeWalker">
         <module name="SuppressionCommentFilter"/>

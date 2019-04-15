@@ -57,6 +57,13 @@ public final class CheckstylePlugin extends SonarPlugin {
             + "SuppressionCommentFilter</a>: "
             + FILTERS_DESCRIPTION_FOOTER;
 
+    private static final String CHECKER_TAB_WIDTH_DESCRIPTION = FILTERS_DESCRIPTION_HEADER
+            + " the <a href=\"http://checkstyle.sourceforge.net/config.html#tabWidth\">"
+            + "tabWidth</a> property. See the "
+            + "<a href='http://checkstyle.sourceforge.net/config.html'>"
+            + "Checkstyle</a> "
+            + "configuration for more information.";
+
     @SuppressWarnings("rawtypes")
     @Override
     public List getExtensions() {
@@ -77,6 +84,15 @@ public final class CheckstylePlugin extends SonarPlugin {
                                 .description(TREEWALKER_FILTERS_DESCRIPTION)
                                 .type(PropertyType.TEXT)
                                 .onQualifiers(Qualifiers.PROJECT, Qualifiers.MODULE).build(),
+                        PropertyDefinition.builder(CheckstyleConstants.CHECKER_TAB_WIDTH)
+                                .defaultValue(CheckstyleConstants.CHECKER_TAB_WIDTH_DEFAULT_VALUE)
+                                .category(CoreProperties.CATEGORY_JAVA)
+                                .subCategory(CHECKSTYLE_SUB_CATEGORY_NAME)
+                                .name("Tab Width")
+                                .description(CHECKER_TAB_WIDTH_DESCRIPTION)
+                                .type(PropertyType.INTEGER)
+                                .onQualifiers(Qualifiers.PROJECT, Qualifiers.MODULE)
+                                .build(),
                         PropertyDefinition.builder(CheckstyleConfiguration.PROPERTY_GENERATE_XML)
                                 .defaultValue("false").category(CoreProperties.CATEGORY_JAVA)
                                 .subCategory(CHECKSTYLE_SUB_CATEGORY_NAME)
