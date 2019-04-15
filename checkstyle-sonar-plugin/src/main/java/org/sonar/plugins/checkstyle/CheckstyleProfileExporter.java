@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -121,12 +120,9 @@ public class CheckstyleProfileExporter extends ProfileExporter {
     }
 
     private void appendTabWidth(Writer writer) throws IOException {
-        final Optional<String> tabWidth = configuration.get(CheckstyleConstants.CHECKER_TAB_WIDTH);
-        if(tabWidth.isPresent()) {
-            writer.append("<property name=\"tabWidth\" value=\"")
-                    .append(tabWidth.get())
-                    .append("\"/>");
-        }
+        final String tabWidth = configuration.get(CheckstyleConstants.CHECKER_TAB_WIDTH)
+                .orElse(null);
+        appendModuleProperty(writer, "tabWidth", tabWidth);
     }
 
     private static void appendCheckerModules(Writer writer,

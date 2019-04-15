@@ -50,9 +50,7 @@ import com.puppycrawl.tools.checkstyle.Checker;
 import com.puppycrawl.tools.checkstyle.TreeWalker;
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.AbstractFileSetCheck;
-import com.puppycrawl.tools.checkstyle.checks.indentation.IndentationCheck;
 import com.puppycrawl.tools.checkstyle.checks.javadoc.AbstractJavadocCheck;
-import com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck;
 
 public class ChecksTest {
     private static final String RULES_PATH =
@@ -383,14 +381,6 @@ public class ChecksTest {
 
             // override
             properties.add("fileExtensions");
-        }
-
-        // overrides
-        if (LineLengthCheck.class.isAssignableFrom(clss)
-                || IndentationCheck.class.isAssignableFrom(clss)) {
-            // all checks have this property, but not many use it
-            // until https://github.com/checkstyle/checkstyle/issues/4111
-            properties.add("tabWidth");
         }
 
         // remove undocumented properties
