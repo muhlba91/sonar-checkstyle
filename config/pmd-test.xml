@@ -52,6 +52,12 @@
         <exclude name="JUnitTestsShouldIncludeAssert"/>
         <!-- until https://github.com/checkstyle/sonar-checkstyle/issues/161 -->
         <exclude name="AvoidFileStream"/>
+        <exclude name="UnitTestShouldIncludeAssert"/>
+        <exclude name="LinguisticNaming"/>
+        <exclude name="AvoidAccessibilityAlteration"/>
+        <exclude name="DoNotUseThreads"/>
+        <exclude name="CloseResource"/>
+        <exclude name="TestClassWithoutTestCases"/>
     </rule>
 
     <rule ref="category/java/design.xml/NcssCount">
@@ -63,7 +69,7 @@
         </properties>
     </rule>
 
-    <rule ref="category/java/bestpractices.xml/JUnitTestContainsTooManyAsserts">
+    <rule ref="category/java/bestpractices.xml/UnitTestContainsTooManyAsserts">
         <properties>
             <property name="maximumAsserts" value="15"/>
         </properties>

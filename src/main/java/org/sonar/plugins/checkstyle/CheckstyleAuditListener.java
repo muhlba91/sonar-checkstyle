@@ -21,7 +21,7 @@ package org.sonar.plugins.checkstyle;
 
 import java.util.Objects;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.ExtensionPoint;
@@ -60,6 +60,7 @@ public class CheckstyleAuditListener implements AuditListener {
     public CheckstyleAuditListener(ActiveRules ruleFinder, FileSystem fileSystem) {
         this.ruleFinder = ruleFinder;
         this.fileSystem = fileSystem;
+        this.context = null;
     }
 
     /**

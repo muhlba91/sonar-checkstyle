@@ -28,7 +28,6 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.function.BiPredicate;
-import java.util.stream.Collectors;
 
 import org.junit.Test;
 
@@ -43,7 +42,7 @@ public class CheckJarTest {
                     .matches(MATCHER);
         };
         final List<Path> files = Files.find(Paths.get("target"), 1, matcher)
-                .collect(Collectors.toList());
+                .toList();
         assertFalse("Jar should exists", files.isEmpty());
     }
 }

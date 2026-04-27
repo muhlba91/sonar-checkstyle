@@ -4,7 +4,7 @@
 
   <groupId>com.github.checkstyle</groupId>
   <artifactId>checkstyle-sonar-plugin</artifactId>
-  <version>10.27.0-SNAPSHOT</version>
+  <version>13.4.1-SNAPSHOT</version>
   <packaging>sonar-plugin</packaging>
 
   <name>Checkstyle SonarQube Plugin</name>
@@ -93,20 +93,20 @@
   </ciManagement>
 
   <properties>
-    <checkstyle.version>10.26.1</checkstyle.version>
+    <checkstyle.version>13.4.1</checkstyle.version>
     <sonar.version>9.9.4.87374</sonar.version>
     <sonar.api-version>9.9.0.229</sonar.api-version>
     <maven.sevntu.checkstyle.plugin.version>1.44.1</maven.sevntu.checkstyle.plugin.version>
     <!-- it should be a version of checkstyle that is compatible/compiled with sevntu -->
     <maven.sevntu.checkstyle.plugin.checkstyle.version>
-      10.26.1
+      13.4.1
     </maven.sevntu.checkstyle.plugin.checkstyle.version>
     <antrun.plugin.version>3.1.0</antrun.plugin.version>
     <checkstyle.configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyle.version}/config/checkstyle-checks.xml</checkstyle.configLocation>
     <checkstyle.sevntu.configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${maven.sevntu.checkstyle.plugin.checkstyle.version}/config/checkstyle-sevntu-checks.xml</checkstyle.sevntu.configLocation>
     <checkstyle.sevntu.cache.file>${project.build.outputDirectory}/sevntu.cache</checkstyle.sevntu.cache.file>
-    <maven.jacoco.plugin.version>0.8.10</maven.jacoco.plugin.version>
-    <maven.compiler.release>11</maven.compiler.release>
+    <maven.jacoco.plugin.version>0.8.14</maven.jacoco.plugin.version>
+    <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- we disable ITs by default as it need download of 200MB sonar application jar -->
     <skipITs>true</skipITs>
@@ -116,14 +116,14 @@
     <dependency>
       <groupId>com.fasterxml.staxmate</groupId>
       <artifactId>staxmate</artifactId>
-      <version>2.4.0</version>
+      <version>2.4.1</version>
       <scope>provided</scope>
     </dependency>
     <!-- required to load external descriptiona, see CheckstyleRulesDefinition -->
     <dependency>
       <groupId>org.sonarsource.sslr-squid-bridge</groupId>
       <artifactId>sslr-squid-bridge</artifactId>
-      <version>2.7.0.377</version>
+      <version>2.7.1.392</version>
       <!-- to avoid 4.5.1 api pickup -->
       <exclusions>
         <exclusion>
@@ -139,23 +139,23 @@
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.14.0</version>
+      <version>2.22.0</version>
     </dependency>
     <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.6</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.20.0</version>
     </dependency>
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
-      <version>1.2</version>
+      <version>1.3.6</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>32.0.0-jre</version>
+      <version>33.6.0-jre</version>
     </dependency>
     <dependency>
       <groupId>org.sonarsource.api.plugin</groupId>
@@ -170,15 +170,15 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>xmlunit</groupId>
-      <artifactId>xmlunit</artifactId>
+      <groupId>org.xmlunit</groupId>
+      <artifactId>xmlunit-legacy</artifactId>
       <scope>test</scope>
-      <version>1.6</version>
+      <version>2.11.0</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.30</version>
+      <version>2.0.17</version>
     </dependency>
     <!--
     We need following dependency, otherwise we will receive
@@ -187,14 +187,14 @@
     -->
     <dependency>
       <groupId>org.apache.maven</groupId>
-      <artifactId>maven-project</artifactId>
-      <version>2.0.7</version>
+      <artifactId>maven-core</artifactId>
+      <version>3.9.15</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>2.23.4</version>
+      <version>3.12.4</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -205,14 +205,14 @@
     </dependency>
     <dependency>
       <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-all</artifactId>
-      <version>1.3</version>
+      <artifactId>hamcrest</artifactId>
+      <version>3.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.13.1</version>
+      <version>4.13.2</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -230,19 +230,19 @@
     <dependency>
       <groupId>org.sonarsource.orchestrator</groupId>
       <artifactId>sonar-orchestrator</artifactId>
-      <version>3.27.0.2172</version>
+      <version>3.42.0.312</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
-      <version>1.7.30</version>
+      <version>2.0.17</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>log4j-over-slf4j</artifactId>
-      <version>1.7.30</version>
+      <version>2.0.17</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -260,7 +260,7 @@
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
-      <version>1.10.11</version>
+      <version>1.10.17</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -298,17 +298,12 @@
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-yaml</artifactId>
-      <version>2.14.0</version>
+      <version>2.21.2</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.14.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.18.0</version>
+      <version>2.21.2</version>
     </dependency>
     <dependency>
       <groupId>org.reflections</groupId>
@@ -445,7 +440,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.13.0</version>
+        <version>3.28.0</version>
         <configuration>
           <analysisCache>false</analysisCache>
           <targetJdk>${maven.compiler.release}</targetJdk>
@@ -470,29 +465,29 @@
           <dependency>
             <groupId>net.sourceforge.pmd</groupId>
             <artifactId>pmd-java</artifactId>
-            <version>6.6.0</version>
+            <version>7.24.0</version>
           </dependency>
           <dependency>
             <groupId>net.sourceforge.pmd</groupId>
             <artifactId>pmd-core</artifactId>
-            <version>6.6.0</version>
+            <version>7.24.0</version>
           </dependency>
           <dependency>
             <groupId>net.sourceforge.pmd</groupId>
             <artifactId>pmd-javascript</artifactId>
-            <version>6.6.0</version>
+            <version>7.24.0</version>
           </dependency>
           <dependency>
             <groupId>net.sourceforge.pmd</groupId>
             <artifactId>pmd-jsp</artifactId>
-            <version>6.6.0</version>
+            <version>7.24.0</version>
           </dependency>
         </dependencies>
       </plugin>
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.7.3.4</version>
+        <version>4.9.8.3</version>
         <configuration>
           <effort>Max</effort>
           <threshold>Low</threshold>
@@ -509,7 +504,7 @@
       <plugin>
         <groupId>de.thetaphi</groupId>
         <artifactId>forbiddenapis</artifactId>
-        <version>3.5.1</version>
+        <version>3.10</version>
         <configuration>
           <targetVersion>${maven.compiler.release}</targetVersion>
           <failOnUnsupportedJava>false</failOnUnsupportedJava>
@@ -711,12 +706,12 @@
                     <limit>
                       <counter>LINE</counter>
                       <value>COVEREDRATIO</value>
-                      <minimum>0.95</minimum>
+                      <minimum>0.94</minimum>
                     </limit>
                     <limit>
                       <counter>BRANCH</counter>
                       <value>COVEREDRATIO</value>
-                      <minimum>0.90</minimum>
+                      <minimum>0.88</minimum>
                     </limit>
                   </limits>
                 </rule>

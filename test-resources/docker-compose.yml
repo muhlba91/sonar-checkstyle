@@ -4,9 +4,9 @@ version: "3"
 services:
   sonarqube:
     # LTS version
-    image: sonarqube:9-community
+    image: sonarqube:26.4.0.121862-community
     # "latest" version
-    #image: sonarqube:10.0-community
+    #image: sonarqube:community
     restart: unless-stopped
     depends_on:
       - db
@@ -30,7 +30,6 @@ services:
       POSTGRES_PASSWORD: sonar
     volumes:
       - postgresql:/var/lib/postgresql
-      - postgresql_data:/var/lib/postgresql/data
 
 volumes:
   sonarqube_conf:
@@ -38,4 +37,3 @@ volumes:
   sonarqube_logs:
   sonarqube_bundled-plugins:
   postgresql:
-  postgresql_data:

@@ -20,9 +20,9 @@
 package org.sonar.plugins.checkstyle;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -119,7 +119,7 @@ public class CheckstyleAuditListenerTest {
         addErrorTestForLine(1);
     }
 
-    private void addErrorTestForLine(final int pLineNo) {
+    private void addErrorTestForLine(final int lineNumber) {
         final ActiveRule rule = setupRule("repo", "key");
 
         final NewIssue newIssue = mock(NewIssue.class);
@@ -136,7 +136,7 @@ public class CheckstyleAuditListenerTest {
             new DefaultTextPointer(1, 1), new DefaultTextPointer(1, 2)));
 
         final AuditEvent eventAdded = new AuditEvent(this, file.getAbsolutePath(),
-            new Violation(pLineNo, "", "", null, "", CheckstyleAuditListenerTest.class,
+            new Violation(lineNumber, "", "", null, "", CheckstyleAuditListenerTest.class,
                 "msg"));
         addErrorToListener(eventAdded);
 
