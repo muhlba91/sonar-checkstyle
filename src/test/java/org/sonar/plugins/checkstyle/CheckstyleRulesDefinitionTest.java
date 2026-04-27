@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import org.junit.Test;
 import org.sonar.api.server.rule.RulesDefinition;
@@ -68,15 +67,15 @@ public class CheckstyleRulesDefinitionTest {
         final List<String> duplicatedRuleWithTemplate = ruleCounts.entrySet().stream()
                 .filter(entry -> entry.getValue() > 1)
                 .map(Entry::getKey)
-                .collect(Collectors.toList());
+                .toList();
         final List<String> rulesWithDuplicateTemplate = ruleCounts.entrySet().stream()
                 .filter(entry -> entry.getValue() == 1)
                 .map(Entry::getKey)
-                .collect(Collectors.toList());
+                .toList();
         // such number should not change during checkstyle version upgrade
         assertThat(duplicatedRuleWithTemplate).hasSize(0);
         // all new Rules should fall in this group
-        assertThat(rulesWithDuplicateTemplate).hasSize(195);
+        assertThat(rulesWithDuplicateTemplate).hasSize(203);
 
         for (RulesDefinition.Rule rule : rules) {
             assertThat(rule.key()).isNotNull();

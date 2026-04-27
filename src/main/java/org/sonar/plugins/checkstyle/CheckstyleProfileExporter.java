@@ -30,8 +30,8 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.sonar.api.batch.rule.ActiveRule;
 import org.sonar.api.batch.rule.ActiveRules;
 import org.sonar.api.config.Configuration;
@@ -177,7 +177,7 @@ public class CheckstyleProfileExporter {
             throws IOException {
         final String moduleName = StringUtils.substringAfterLast(activeRule.internalKey(), "/");
         writer.append("<module name=\"");
-        StringEscapeUtils.escapeXml(writer, moduleName);
+        writer.append(StringEscapeUtils.escapeXml10(moduleName));
         writer.append("\">");
         if (activeRule.templateRuleKey() != null) {
             appendModuleProperty(writer, "id",
@@ -202,9 +202,9 @@ public class CheckstyleProfileExporter {
             @Nullable String propertyValue) throws IOException {
         if (StringUtils.isNotBlank(propertyValue)) {
             writer.append("<property name=\"");
-            StringEscapeUtils.escapeXml(writer, propertyKey);
+            writer.append(StringEscapeUtils.escapeXml10(propertyKey));
             writer.append("\" value=\"");
-            StringEscapeUtils.escapeXml(writer, propertyValue);
+            writer.append(StringEscapeUtils.escapeXml10(propertyValue));
             writer.append("\"/>");
         }
     }

@@ -17,12 +17,14 @@
     <exclude name="GuardLogStatement"/>
     <!-- Till https://github.com/pmd/pmd/issues/1181 -->
     <exclude name="UnusedPrivateMethod"/>
+    <exclude name="UseTryWithResources"/>
   </rule>
 
   <rule ref="category/java/documentation.xml">
     <!-- We use class comments as source for xdoc files,
          so content is big and that is by design. -->
     <exclude name="CommentSize"/>
+    <exclude name="DanglingJavadoc"/>
   </rule>
 
   <rule ref="category/java/codestyle.xml">
@@ -107,6 +109,11 @@
       <property name="methodReportLevel" value="32"/>
     </properties>
   </rule>
+  <rule ref="category/java/design.xml/AvoidDeeplyNestedIfStmts">
+    <properties>
+      <property name="problemDepth" value="5" />
+    </properties>
+  </rule>
   <rule ref="category/java/design.xml/CyclomaticComplexity">
     <properties>
       <property name="classReportLevel" value="76"/>
@@ -122,6 +129,8 @@
     <!-- Checkstyle is not thread safe till https://github.com/checkstyle/checkstyle/projects/5. -->
     <exclude name="UseConcurrentHashMap"/>
     <exclude name="NonThreadSafeSingleton"/>
+    <!-- This plugin is not a J2EE webapp. -->
+    <exclude name="DoNotUseThreads"/>
   </rule>
 
   <rule ref="category/java/performance.xml">
@@ -135,7 +144,7 @@
   <rule name="CheckstyleCustomShortVariable"
         message="Avoid variables with short names that shorter than 2 symbols: {0}"
         language="java"
-        class="net.sourceforge.pmd.lang.rule.XPathRule"
+        class="net.sourceforge.pmd.lang.rule.xpath.XPathRule"
         externalInfoUrl="">
     <description>
       Fields, local variables, or parameter names that are very short are not helpful to the reader.

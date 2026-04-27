@@ -127,7 +127,7 @@ public class CheckstyleConfiguration {
      */
     public File getTargetXmlReport() {
         return conf.getBoolean(PROPERTY_GENERATE_XML)
-                .map(aBoolean -> new File(fileSystem.workDir(), "checkstyle-result.xml"))
+                .map(value -> new File(fileSystem.workDir(), "checkstyle-result.xml"))
                 .orElse(null);
     }
 
@@ -160,13 +160,13 @@ public class CheckstyleConfiguration {
     }
 
     private void defineModuleCharset(Configuration module) {
-        if (module instanceof DefaultConfiguration
+        if (module instanceof DefaultConfiguration defaultconfiguration
                 && ("Checker".equals(module.getName())
                         || "com.puppycrawl.tools.checkstyle.Checker".equals(module.getName()))) {
             final Charset charset = getCharset();
             final String charsetName = charset.name();
             LOG.info("Checkstyle charset: {}", charsetName);
-            ((DefaultConfiguration) module).addProperty("charset", charsetName);
+            defaultconfiguration.addProperty("charset", charsetName);
         }
     }
 

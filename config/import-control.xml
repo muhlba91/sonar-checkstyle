@@ -28,6 +28,8 @@
 
   <allow pkg="org.apache.commons.io"/>
   <allow pkg="org.apache.commons.lang"/>
+  <allow pkg="org.apache.commons.lang3"/>
+  <allow pkg="org.apache.commons.text"/>
   <allow class="com.google.common.annotations.VisibleForTesting"/>
 
   <allow class="org.codehaus.staxmate.SMInputFactory"/>

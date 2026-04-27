@@ -62,7 +62,7 @@ public final class CheckUtil {
         return Arrays.stream(tokens)
               .boxed()
               .filter(token -> !requiredTokensSet.contains(token))
-              .collect(Collectors.toList());
+              .toList();
     }
 
     private static String getTokens(Function<Integer, String> function,

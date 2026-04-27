@@ -28,7 +28,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -42,6 +41,7 @@ import com.puppycrawl.tools.checkstyle.AbstractAutomaticBean;
 import com.puppycrawl.tools.checkstyle.Checker;
 import com.puppycrawl.tools.checkstyle.PackageNamesLoader;
 import com.puppycrawl.tools.checkstyle.XMLLogger;
+import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 
 @ExtensionPoint
 @ScannerSide
@@ -87,7 +87,6 @@ public class CheckstyleExecutor {
 
     private void executeWithClassLoader() {
         final Checker checker = new Checker();
-        OutputStream xmlOutput = null;
         try {
             checker.setModuleClassLoader(Thread.currentThread().getContextClassLoader());
             checker.addListener(listener);
@@ -95,28 +94,33 @@ public class CheckstyleExecutor {
             final File xmlReport = configuration.getTargetXmlReport();
             if (xmlReport != null) {
                 LOG.info("Checkstyle output report: {}", xmlReport.getAbsolutePath());
-                xmlOutput = FileUtils.openOutputStream(xmlReport);
-                checker.addListener(
-                        new XMLLogger(xmlOutput, AbstractAutomaticBean.OutputStreamOptions.CLOSE));
+                try (OutputStream xmlOutput = FileUtils.openOutputStream(xmlReport)) {
+                    checker.addListener(
+                            new XMLLogger(xmlOutput,
+                                          AbstractAutomaticBean.OutputStreamOptions.CLOSE));
+                    runChecker(checker);
+                }
             }
-
-            checker.setCharset(configuration.getCharset().name());
-            checker.configure(configuration.getCheckstyleConfiguration());
-            checker.process(configuration
-                    .getSourceFiles()
-                .stream()
-                .map(inputFile -> new File(inputFile.uri()))
-                .collect(Collectors.toList()));
+            else {
+                runChecker(checker);
+            }
         }
-        catch (Exception exception) {
+        catch (CheckstyleException | IOException | RuntimeException exception) {
             throw new IllegalStateException("Can not execute Checkstyle", exception);
         }
         finally {
             checker.destroy();
-            if (Objects.nonNull(xmlOutput)) {
-                close(xmlOutput);
-            }
         }
+    }
+
+    private void runChecker(Checker checker) throws CheckstyleException, IOException {
+        checker.setCharset(configuration.getCharset().name());
+        checker.configure(configuration.getCheckstyleConfiguration());
+        checker.process(configuration
+                .getSourceFiles()
+            .stream()
+            .map(inputFile -> new File(inputFile.uri()))
+            .toList());
     }
 
     @VisibleForTesting
