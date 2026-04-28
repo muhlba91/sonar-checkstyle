@@ -1,0 +1,78 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:recommended",
+        ":configMigration",
+        "helpers:pinGitHubActionDigests",
+        ":dependencyDashboard",
+        ":prHourlyLimitNone",
+        ":prConcurrentLimitNone",
+        ":combinePatchMinorReleases",
+        ":semanticCommitTypeAll(chore)",
+        ":label(dependencies)",
+        "group:monorepos",
+        "group:githubArtifactActions"
+    ],
+    "assignAutomerge": true,
+    "automergeStrategy": "rebase",
+    "platformAutomerge": true,
+    "baseBranchPatterns": [
+        "master"
+    ],
+    "packageRules": [
+        {
+            "matchUpdateTypes": [
+                "patch"
+            ],
+            "labels": [
+                "dependencies",
+                "renovate-patch"
+            ]
+        },
+        {
+            "matchUpdateTypes": [
+                "digest"
+            ],
+            "labels": [
+                "dependencies",
+                "renovate-digest"
+            ]
+        },
+        {
+            "matchUpdateTypes": [
+                "minor"
+            ],
+            "labels": [
+                "dependencies",
+                "renovate-minor"
+            ]
+        },
+        {
+            "matchUpdateTypes": [
+                "major"
+            ],
+            "labels": [
+                "dependencies",
+                "renovate-major"
+            ]
+        },
+        {
+            "matchUpdateTypes": [
+                "minor",
+                "patch",
+                "digest"
+            ],
+            "matchManagers": [
+                "github-actions"
+            ],
+            "labels": [
+                "dependencies",
+                "renovate-github-actions"
+            ]
+        }
+    ],
+    "enabledManagers": [
+        "github-actions",
+        "maven"
+    ]
+}

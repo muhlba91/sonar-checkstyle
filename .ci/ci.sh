@@ -8,6 +8,10 @@ install)
   mvn -e --no-transfer-progress clean install
   ;;
 
+package)
+  mvn -e --no-transfer-progress clean package -Pno-validations
+  ;;
+
 integration-tests)
   SONAR_APP_VERSION="8.9.3.48735"
   if [[ ! -f ~/.m2/sonar-application-$SONAR_APP_VERSION.zip ]]; then

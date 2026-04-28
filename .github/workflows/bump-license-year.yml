@@ -5,7 +5,6 @@
 # Workflow starts every new year.
 #
 #############################################################################
-
 name: "Bump license year"
 
 on:
@@ -21,21 +20,20 @@ jobs:
     name: Bump license year
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the latest code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set Current Year
-        id: CURRENT_YEAR
+
+      - id: CURRENT_YEAR
         run: |
           echo "year=$(date +'%Y')" >> $GITHUB_OUTPUT
+
       - name: Modify Files
         run: |
           ./.ci/bump-license-year.sh $(expr ${{ env.YEAR }} - 1) ${{ env.YEAR }} .
         env:
           YEAR: ${{ steps.CURRENT_YEAR.outputs.year }}
-      - name: Push commit
-        run: |
+      - run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git commit -am "minor: Bump year to ${{ env.YEAR }}"
