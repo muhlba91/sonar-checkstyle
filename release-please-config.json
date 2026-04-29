@@ -59,5 +59,6 @@
             "section": "Continuous Integration",
             "hidden": true
         }
-    ]
+    ],
+    "bootstrap-sha": "a8490951859ed4c255fed532806dc1ebc9acbe53"
 }
