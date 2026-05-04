@@ -88,14 +88,14 @@
     <url>https://github.com/checkstyle/sonar-checkstyle/issues</url>
   </issueManagement>
   <ciManagement>
-    <system>travis</system>
-    <url>https://travis-ci.org/checkstyle/sonar-checkstyle</url>
+    <system>github</system>
+    <url>https://github.com/checkstyle/sonar-checkstyle/actions</url>
   </ciManagement>
 
   <properties>
     <checkstyle.version>13.4.1</checkstyle.version>
-    <sonar.version>9.9.4.87374</sonar.version>
-    <sonar.api-version>9.9.0.229</sonar.api-version>
+    <sonar.version>25.2.0.102705</sonar.version>
+    <sonar.api-version>11.3.0.2824</sonar.api-version>
     <maven.sevntu.checkstyle.plugin.version>1.44.1</maven.sevntu.checkstyle.plugin.version>
     <!-- it should be a version of checkstyle that is compatible/compiled with sevntu -->
     <maven.sevntu.checkstyle.plugin.checkstyle.version>

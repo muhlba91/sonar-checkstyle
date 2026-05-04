@@ -187,13 +187,13 @@ public class CheckstyleExecutorTest {
                                 file.getParentFile().toPath(),
                                 file.getName(),
                                 "java"),
-                        DefaultInputFile::checkMetadata),
+                        DefaultInputFile::checkMetadata, DefaultInputFile::checkMetadata),
                 new DefaultInputFile(
                         new DefaultIndexedFile("",
                                 file2.getParentFile().toPath(),
                                 file2.getName(),
                                 "java"),
-                        DefaultInputFile::checkMetadata)
+                        DefaultInputFile::checkMetadata, DefaultInputFile::checkMetadata)
         ));
 
         return conf;
