@@ -62,7 +62,7 @@ public class CheckstyleConfigurationTest {
                         new File("").toPath(),
                         file.getName(),
                         "java"),
-                DefaultInputFile::checkMetadata);
+                DefaultInputFile::checkMetadata, DefaultInputFile::checkMetadata);
         fileSystem.add(inputFile);
 
         final File testFile = new File("testFile");
@@ -75,7 +75,7 @@ public class CheckstyleConfigurationTest {
                         "java",
                         TestInputFileBuilder.nextBatchId(),
                         new SensorStrategy()),
-                DefaultInputFile::checkMetadata);
+                DefaultInputFile::checkMetadata, DefaultInputFile::checkMetadata);
         fileSystem.add(testInputFile);
     }
 
