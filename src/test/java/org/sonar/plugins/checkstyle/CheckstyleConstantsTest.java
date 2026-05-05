@@ -19,17 +19,17 @@
 
 package org.sonar.plugins.checkstyle;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class CheckstyleConstantsTest {
+class CheckstyleConstantsTest {
 
     @Test
-    public void privateConstructor() throws ReflectiveOperationException {
+    void privateConstructor() throws ReflectiveOperationException {
         final Constructor<CheckstyleConstants> constructor = CheckstyleConstants.class
                 .getDeclaredConstructor();
         assertThat(Modifier.isPrivate(constructor.getModifiers())).isTrue();

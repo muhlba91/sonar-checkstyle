@@ -19,24 +19,24 @@
 
 package org.sonar.plugins.checkstyle;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.sonar.api.Plugin;
 
-public class CheckstylePluginTest {
+class CheckstylePluginTest {
 
     @Test
-    public void testGetExtensions() {
+    void testGetExtensions() {
         assertThat(CheckstylePlugin.getExtensions().size()).isEqualTo(9);
     }
 
     @Test
-    public void testDefine() {
+    void testDefine() {
         final Plugin.Context context = mock(Plugin.Context.class);
 
         final CheckstylePlugin plugin = new CheckstylePlugin();

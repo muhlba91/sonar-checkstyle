@@ -19,9 +19,8 @@
 
 package org.sonar.plugins.checkstyle;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.Assert.assertThrows;
-import static org.mockito.Matchers.any;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -38,8 +37,8 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
@@ -50,14 +49,14 @@ import org.sonar.api.batch.sensor.SensorContext;
 import com.puppycrawl.tools.checkstyle.api.AuditEvent;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 
-public class CheckstyleExecutorTest {
+class CheckstyleExecutorTest {
 
     // Remove the 'thrown' field
 
     private final SensorContext context = mock(SensorContext.class);
 
     @Test
-    public void execute() throws CheckstyleException {
+    void execute() throws CheckstyleException {
         final CheckstyleConfiguration conf = mockConf();
         final CheckstyleAuditListener listener = mockListener();
         final CheckstyleExecutor executor = new CheckstyleExecutor(conf, listener);
@@ -84,22 +83,22 @@ public class CheckstyleExecutorTest {
     }
 
     @Test
-    public void executeException() throws CheckstyleException {
+    void executeException() throws CheckstyleException {
         final CheckstyleConfiguration conf = mockConf();
         final CheckstyleExecutor executor = new CheckstyleExecutor(conf, null);
-        assertThrows("Can not execute Checkstyle",
-                            IllegalStateException.class,
-                            () -> executor.execute(context));
+        Assertions.assertThrows(IllegalStateException.class,
+                            () -> executor.execute(context),
+                            "Can not execute Checkstyle");
     }
 
     @Test
-    public void getUrlException() throws URISyntaxException {
+    void getUrlException() throws URISyntaxException {
         final CheckstyleExecutor executor = new CheckstyleExecutor(null, mockListener());
         final URI uri = new URI("htp://aa");
-        assertThrows("Fail to create the project classloader. "
-                                + "Classpath element is invalid: htp://aa",
-                            IllegalStateException.class,
-                            () -> executor.getUrl(uri));
+        Assertions.assertThrows(IllegalStateException.class,
+                            () -> executor.getUrl(uri),
+                            "Fail to create the project classloader. "
+                                + "Classpath element is invalid: htp://aa");
     }
 
     /**
@@ -109,7 +108,7 @@ public class CheckstyleExecutorTest {
      * @noinspectionreason Cache the value of the default locale.
      */
     @Test
-    public void generateXmlReportInEnglish() throws Exception {
+    void generateXmlReportInEnglish() throws Exception {
         final Locale initialLocale = Locale.getDefault();
         Locale.setDefault(Locale.FRENCH);
 
@@ -123,7 +122,7 @@ public class CheckstyleExecutorTest {
             final CheckstyleExecutor executor = new CheckstyleExecutor(conf, listener);
             executor.execute(context);
 
-            Assert.assertTrue("Report should exists", report.exists());
+            Assertions.assertTrue(report.exists(), "Report should exists");
 
             final String reportContents = FileUtils.readFileToString(report,
                                                                     Charset.defaultCharset());
@@ -137,7 +136,7 @@ public class CheckstyleExecutorTest {
     }
 
     @Test
-    public void generateXmlReportNull() throws CheckstyleException {
+    void generateXmlReportNull() throws CheckstyleException {
         final CheckstyleConfiguration conf = mockConf();
         final File report = new File("target/test-tmp/checkstyle-report.xml");
         // delete if exists from a previous run
@@ -147,11 +146,11 @@ public class CheckstyleExecutorTest {
         final CheckstyleExecutor executor = new CheckstyleExecutor(conf, listener);
         executor.execute(context);
 
-        Assert.assertFalse("Report should NOT exists", report.exists());
+        Assertions.assertFalse(report.exists(), "Report should NOT exists");
     }
 
     @Test
-    public void closeNoException() throws IOException {
+    void closeNoException() throws IOException {
         final Closeable closeable = mock(Closeable.class);
 
         CheckstyleExecutor.close(closeable);
@@ -160,12 +159,13 @@ public class CheckstyleExecutorTest {
     }
 
     @Test
-    public void closeWithException() throws IOException {
+    void closeWithException() throws IOException {
         final Closeable closeable = mock(Closeable.class);
         // using a static import pushes us above the PMD import limit
         Mockito.doThrow(IOException.class).when(closeable).close();
 
-        assertThrows(IllegalStateException.class, () -> CheckstyleExecutor.close(closeable));
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> CheckstyleExecutor.close(closeable));
     }
 
     private static CheckstyleAuditListener mockListener() {

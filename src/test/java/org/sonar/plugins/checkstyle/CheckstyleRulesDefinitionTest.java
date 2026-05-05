@@ -19,19 +19,19 @@
 
 package org.sonar.plugins.checkstyle;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.sonar.api.server.rule.RulesDefinition;
 
 import com.google.common.collect.ImmutableList;
 
-public class CheckstyleRulesDefinitionTest {
+class CheckstyleRulesDefinitionTest {
 
     private static final List<String> NO_SQALE = ImmutableList.of(
             "com.puppycrawl.tools.checkstyle.checks.TranslationCheck",
@@ -48,7 +48,7 @@ public class CheckstyleRulesDefinitionTest {
     );
 
     @Test
-    public void test() {
+    void test() {
         final CheckstyleRulesDefinition definition = new CheckstyleRulesDefinition();
         final RulesDefinition.Context context = new RulesDefinition.Context();
         definition.define(context);

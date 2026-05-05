@@ -19,7 +19,7 @@
 
 package org.sonar.plugins.checkstyle;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +28,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.DefaultIndexedFile;
@@ -47,12 +47,12 @@ import org.sonar.api.utils.System2;
 
 import com.puppycrawl.tools.checkstyle.api.Configuration;
 
-public class CheckstyleConfigurationTest {
+class CheckstyleConfigurationTest {
 
     private DefaultFileSystem fileSystem;
 
-    @Before
-    public void beforeClass() {
+    @BeforeEach
+    void beforeClass() {
         fileSystem = new DefaultFileSystem(new File(""));
         fileSystem.setWorkDir(new File(".").toPath());
 
@@ -80,7 +80,7 @@ public class CheckstyleConfigurationTest {
     }
 
     @Test
-    public void getSourceFilesWithDefaultExporter() {
+    void getSourceFilesWithDefaultExporter() {
         final CheckstyleConfiguration configuration = new CheckstyleConfiguration(null,
                 null, fileSystem);
         assertThat(configuration.getSourceFiles()).hasSize(1);
@@ -89,7 +89,7 @@ public class CheckstyleConfigurationTest {
     }
 
     @Test
-    public void getSourceFiles() {
+    void getSourceFiles() {
         final CheckstyleProfileExporter exporter = new FakeExporter();
         final CheckstyleConfiguration configuration = new CheckstyleConfiguration(null, exporter,
                 null, fileSystem);
@@ -99,7 +99,7 @@ public class CheckstyleConfigurationTest {
     }
 
     @Test
-    public void getTargetXmlReport() {
+    void getTargetXmlReport() {
         final org.sonar.api.config.Configuration settings =
                 new ConfigurationBridge(new MapSettings());
         final CheckstyleConfiguration configuration = new CheckstyleConfiguration(settings,
@@ -116,7 +116,7 @@ public class CheckstyleConfigurationTest {
     }
 
     @Test
-    public void writeConfigurationToWorkingDir() throws IOException {
+    void writeConfigurationToWorkingDir() throws IOException {
         final CheckstyleProfileExporter exporter = new FakeExporter();
         final CheckstyleConfiguration configuration = new CheckstyleConfiguration(null, exporter,
                 new DefaultActiveRules(Collections.emptyList()), fileSystem);
@@ -130,7 +130,7 @@ public class CheckstyleConfigurationTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void getCheckstyleConfiguration() throws Exception {
+    void getCheckstyleConfiguration() throws Exception {
         fileSystem.setEncoding(StandardCharsets.UTF_8);
         final MapSettings mapSettings = new MapSettings(new PropertyDefinitions(
                 System2.INSTANCE, CheckstylePlugin.getExtensions()));

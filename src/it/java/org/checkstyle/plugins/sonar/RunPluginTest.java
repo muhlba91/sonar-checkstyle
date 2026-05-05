@@ -20,7 +20,7 @@
 package org.checkstyle.plugins.sonar;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,17 +35,13 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
-import org.fest.util.Collections;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.io.TempDir;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
-import com.sonar.orchestrator.Orchestrator;
 import com.sonar.orchestrator.build.Build;
 import com.sonar.orchestrator.build.BuildResult;
 import com.sonar.orchestrator.build.MavenBuild;
@@ -53,57 +49,44 @@ import com.sonar.orchestrator.container.Edition;
 import com.sonar.orchestrator.container.Server;
 import com.sonar.orchestrator.http.HttpMethod;
 import com.sonar.orchestrator.http.HttpResponse;
+import com.sonar.orchestrator.junit5.OrchestratorExtension;
 import com.sonar.orchestrator.locator.FileLocation;
 import com.sonar.orchestrator.locator.MavenLocation;
 
 /**
  * Integration testing of plugin jar inside of sonar.
  */
-public class RunPluginTest {
+class RunPluginTest {
+
+    @RegisterExtension
+    static final OrchestratorExtension ORCHESTRATOR = OrchestratorExtension.builderEnv()
+            .setSonarVersion("LATEST_RELEASE")
+            .setEdition(Edition.COMMUNITY)
+            .addPlugin(FileLocation.byWildcardMavenFilename(new File("target"),
+                    "checkstyle-sonar-plugin-*.jar"))
+            .addPlugin(MavenLocation.of("org.sonarsource.sonar-lits-plugin",
+                    "sonar-lits-plugin",
+                    "0.11.0.2659"))
+            .addPlugin(MavenLocation.of("org.sonarsource.java",
+                    "sonar-java-plugin",
+                    "8.29.0.43460"))
+            .setServerProperty("sonar.web.javaOpts", "-Xmx1G")
+            .build();
+
     private static final Logger LOG = LoggerFactory.getLogger(RunPluginTest.class);
-    private static final String SONAR_APP_VERSION = "8.9.3.48735";
     private static final int LOGS_NUMBER_LINES = 200;
     private static final String TRUE = "true";
     private static final String PROJECT_KEY = "com.puppycrows.tools:checkstyle";
     private static final String PROJECT_NAME = "integration-test-project";
-    private static final List<String> DEACTIVATED_RULES = Collections.list(
-            "com.puppycrawl.tools.checkstyle.checks.coding.MissingCtorCheck",
-            "com.puppycrawl.tools.checkstyle.checks.design.DesignForExtensionCheck",
-            "com.puppycrawl.tools.checkstyle.checks.imports.ImportControlCheck",
-            "com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocPackageCheck",
-            "com.puppycrawl.tools.checkstyle.checks.javadoc.WriteTagCheck",
-            "com.puppycrawl.tools.checkstyle.checks.UncommentedMainCheck");
+    private static final List<String> DEACTIVATED_RULES = List.of(
+            "com.puppycrawl.tools.checkstyle.checks.coding.MissingCtorCheck"
+        );
 
-    private static Orchestrator orchestrator;
-
-    @Rule
-    public final TemporaryFolder temp = new TemporaryFolder();
-
-    @BeforeClass
-    public static void beforeAll() {
-        orchestrator = Orchestrator.builderEnv()
-                .setZipFile(new File("target/temp-downloads/sonar-application-"
-                                     + SONAR_APP_VERSION
-                                     + ".zip"))
-                .setEdition(Edition.COMMUNITY)
-                .addPlugin(FileLocation.byWildcardMavenFilename(new File("target"),
-                        "checkstyle-sonar-plugin-*.jar"))
-                .addPlugin(MavenLocation.of("org.sonarsource.sonar-lits-plugin",
-                        "sonar-lits-plugin",
-                        "0.8.0.1209"))
-                .setServerProperty("sonar.web.javaOpts", "-Xmx1G")
-                .build();
-
-        orchestrator.start();
-    }
-
-    @AfterClass
-    public static void afterAll() {
-        orchestrator.stop();
-    }
+    @TempDir
+    Path temp;
 
     @Test
-    public void testSonarExecution() throws IOException {
+    void testSonarExecution() throws IOException {
         final MavenBuild build = testProjectBuild();
         executeBuildWithCommonProperties(build, true);
     }
@@ -117,24 +100,17 @@ public class RunPluginTest {
                 .getFile()
                 .getAbsolutePath();
         build
-                .setProperty("sonar.login", "admin")
-                .setProperty("sonar.password", "admin")
-                .setProperty("sonar.cpd.exclusions", "**/*")
-                .setProperty("sonar.import_unknown_files", TRUE)
-                .setProperty("sonar.skipPackageDesign", TRUE)
-                .setProperty("dump.old", dumpOldLocation)
-                .setProperty("dump.new", dumpNewLocation)
-                .setProperty("lits.differences", litsDifferencesPath())
-                .setProperty("sonar.java.xfile", TRUE)
-                .setProperty("sonar.java.failOnException", TRUE);
+                .setProperty("sonar.lits.dump.old", dumpOldLocation)
+                .setProperty("sonar.lits.dump.new", dumpNewLocation)
+                .setProperty("sonar.lits.differences", litsDifferencesPath());
 
         final BuildResult buildResult;
         // if build fail, job is not violently interrupted, allowing time to dump SQ logs
         if (buildQuietly) {
-            buildResult = orchestrator.executeBuildQuietly(build);
+            buildResult = ORCHESTRATOR.executeBuildQuietly(build);
         }
         else {
-            buildResult = orchestrator.executeBuild(build);
+            buildResult = ORCHESTRATOR.executeBuild(build);
         }
 
         if (buildResult.isSuccess()) {
@@ -167,7 +143,7 @@ public class RunPluginTest {
     }
 
     private static void dumpServerLogs() throws IOException {
-        final Server server = orchestrator.getServer();
+        final Server server = ORCHESTRATOR.getServer();
         LOG.error(":::::::::::::::: DUMPING SERVER LOGS ::::::::::::::::");
         dumpServerLogLastLines(server.getAppLogs());
         dumpServerLogLastLines(server.getCeLogs());
@@ -193,25 +169,34 @@ public class RunPluginTest {
 
     private MavenBuild testProjectBuild() throws IOException {
         final File targetDir = prepareProject();
+        final String token = retrieveToken();
 
         final String pomLocation = targetDir.getCanonicalPath() + "/pom.xml";
         final File pomFile = FileLocation.of(pomLocation)
                 .getFile()
                 .getCanonicalFile();
-        final MavenBuild mavenBuild = MavenBuild.create()
+        return MavenBuild.create()
                 .setPom(pomFile)
-                .setCleanPackageSonarGoals()
+                .addGoal("clean")
+                .addGoal("package")
+                .addGoal("sonar:sonar")
                 .addArgument("-Dmaven.test.skip=true")
                 .addArgument("-DskipTests")
-                .addArgument("-DskipITs");
-        mavenBuild.setProperty("sonar.projectKey", PROJECT_KEY);
-        return mavenBuild;
+                .addArgument("-DskipITs")
+                .setProperty("sonar.login", "admin")
+                .setProperty("sonar.token", token)
+                .setProperty("sonar.cpd.exclusions", "**/*")
+                .setProperty("sonar.import_unknown_files", TRUE)
+                .setProperty("sonar.skipPackageDesign", TRUE)
+                .setProperty("sonar.java.xfile", TRUE)
+                .setProperty("sonar.java.failOnException", TRUE)
+                .setProperty("sonar.projectKey", PROJECT_KEY);
     }
 
     @SuppressWarnings("unchecked")
     private File prepareProject() throws IOException {
         // set severities of all active rules to INFO
-        final String profilesResponse = orchestrator.getServer()
+        final String profilesResponse = ORCHESTRATOR.getServer()
                 .newHttpCall("api/qualityprofiles/create")
                 .setAdminCredentials()
                 .setMethod(HttpMethod.POST)
@@ -225,13 +210,13 @@ public class RunPluginTest {
             fail("Could not retrieve profile key: setting up quality profile failed.");
         }
         else {
-            final HttpResponse activateRulesResponse = orchestrator.getServer()
+            final HttpResponse activateRulesResponse = ORCHESTRATOR.getServer()
                     .newHttpCall("api/qualityprofiles/activate_rules")
                     .setAdminCredentials()
                     .setMethod(HttpMethod.POST)
-                    .setParam("activation_severity", "INFO")
+                    .setParam("severities", "INFO")
                     .setParam("languages", "java")
-                    .setParam("profile_key", profileKey)
+                    .setParam("targetKey", profileKey)
                     .setParam("repositories", "checkstyle")
                     .executeUnsafely();
             if (!activateRulesResponse.isSuccessful()) {
@@ -241,12 +226,12 @@ public class RunPluginTest {
             }
             // deactivate some rules for test project
             for (String ruleKey : DEACTIVATED_RULES) {
-                final HttpResponse deactivateRulesResponse = orchestrator.getServer()
+                final HttpResponse deactivateRulesResponse = ORCHESTRATOR.getServer()
                         .newHttpCall("api/qualityprofiles/deactivate_rule")
                         .setAdminCredentials()
                         .setMethod(HttpMethod.POST)
-                        .setParam("rule_key", "checkstyle:" + ruleKey)
-                        .setParam("profile_key", profileKey)
+                        .setParam("rule", "checkstyle:" + ruleKey)
+                        .setParam("key", profileKey)
                         .executeUnsafely();
                 if (!deactivateRulesResponse.isSuccessful()) {
                     fail(String.format(Locale.ROOT,
@@ -258,14 +243,14 @@ public class RunPluginTest {
         }
 
         // associate CS profile
-        orchestrator.getServer().provisionProject(PROJECT_KEY, PROJECT_NAME);
-        final HttpResponse assignQpResponse = orchestrator.getServer()
+        ORCHESTRATOR.getServer().provisionProject(PROJECT_KEY, PROJECT_NAME);
+        final HttpResponse assignQpResponse = ORCHESTRATOR.getServer()
                 .newHttpCall("api/qualityprofiles/add_project")
                 .setAdminCredentials()
                 .setMethod(HttpMethod.POST)
                 .setParam("language", "java")
-                .setParam("profileName", "checkstyle")
-                .setParam("projectKey", PROJECT_KEY)
+                .setParam("qualityProfile", "checkstyle")
+                .setParam("project", PROJECT_KEY)
                 .executeUnsafely();
         if (!assignQpResponse.isSuccessful()) {
             fail(String.format(Locale.ROOT,
@@ -275,8 +260,25 @@ public class RunPluginTest {
 
         // copy project to analysis space
         final Path projectRoot = Paths.get("src/it/resources/" + PROJECT_NAME);
-        final File targetDir = temp.newFolder(PROJECT_NAME);
+        final File targetDir = temp.resolve(PROJECT_NAME).toFile();
         FileUtils.copyDirectory(projectRoot.toFile(), targetDir);
         return targetDir;
+    }
+
+    @SuppressWarnings("unchecked")
+    private String retrieveToken() {
+        final String response = ORCHESTRATOR.getServer()
+                .newHttpCall("api/user_tokens/generate")
+                .setAdminCredentials()
+                .setMethod(HttpMethod.POST)
+                .setParam("name", "integration-test-token")
+                .execute()
+                .getBodyAsString();
+        final Map<String, Object> map = new Gson().fromJson(response, Map.class);
+        final String token = (String) map.get("token");
+        if (StringUtils.isEmpty(token)) {
+            fail("Could not retrieve token: authentication for build will fail.");
+        }
+        return token;
     }
 }

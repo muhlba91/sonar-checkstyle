@@ -19,7 +19,7 @@
 
 package org.sonar.plugins.checkstyle;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
@@ -57,7 +57,7 @@ public final class CheckstyleTestUtils {
             throw new IllegalArgumentException("Could not run XML comparison", exception);
         }
         final String message = "Diff: " + diff + CharUtils.LF + "XML: " + xml;
-        assertTrue(message, diff.similar());
+        assertTrue(diff.similar(), message);
     }
 
     public static void assertSimilarXmlWithResource(String expectedXmlResourcePath, String xml) {

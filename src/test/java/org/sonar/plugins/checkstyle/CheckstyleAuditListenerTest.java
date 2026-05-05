@@ -19,20 +19,20 @@
 
 package org.sonar.plugins.checkstyle;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.FileSystem;
@@ -52,7 +52,7 @@ import com.puppycrawl.tools.checkstyle.TreeWalker;
 import com.puppycrawl.tools.checkstyle.api.AuditEvent;
 import com.puppycrawl.tools.checkstyle.api.Violation;
 
-public class CheckstyleAuditListenerTest {
+class CheckstyleAuditListenerTest {
 
     private final File file = new File("file1");
     private final AuditEvent event = new AuditEvent(this, file.getAbsolutePath(),
@@ -62,8 +62,8 @@ public class CheckstyleAuditListenerTest {
     private SensorContext context;
     private FileSystem fileSystem;
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void before() {
         fileSystem = mock(FileSystem.class);
         context = mock(SensorContext.class);
         inputFile = mock(InputFile.class);
@@ -77,7 +77,7 @@ public class CheckstyleAuditListenerTest {
     }
 
     @Test
-    public void testUtilityMethods() {
+    void testUtilityMethods() {
         final AuditEvent event1 = new AuditEvent(this, "", new Violation(0, "", "", null, "",
                 CheckstyleAuditListenerTest.class, "msg"));
         assertThat(CheckstyleAuditListener.getLineId(event1)).isEqualTo(1);
@@ -105,17 +105,17 @@ public class CheckstyleAuditListenerTest {
     }
 
     @Test
-    public void addErrorTest() {
+    void addErrorTest() {
         addErrorTestForLine(42);
     }
 
     @Test
-    public void addErrorLine0Test() {
+    void addErrorLine0Test() {
         addErrorTestForLine(0);
     }
 
     @Test
-    public void addErrorLine1Test() {
+    void addErrorLine1Test() {
         addErrorTestForLine(1);
     }
 
@@ -150,14 +150,14 @@ public class CheckstyleAuditListenerTest {
     }
 
     @Test
-    public void addErrorOnUnknownRule() {
+    void addErrorOnUnknownRule() {
         when(context.newIssue()).thenReturn(null);
         addErrorToListener(event);
         verify(context, times(1)).newIssue();
     }
 
     @Test
-    public void addErrorOnTreeWalkerRule() {
+    void addErrorOnTreeWalkerRule() {
         final AuditEvent treeWalkerEvent = new AuditEvent(
                 this,
                 file.getAbsolutePath(),
@@ -170,10 +170,11 @@ public class CheckstyleAuditListenerTest {
     }
 
     @Test
-    public void addErrorOnUnknownFile() {
+    void addErrorOnUnknownFile() {
         final ActiveRule rule = setupRule("repo", "key");
         addErrorToListener(event);
-        verifyZeroInteractions(rule);
+        // verifyZeroInteractions is replaced by verifyNoInteractions in Mockito 3+
+        Mockito.verifyNoInteractions(rule);
     }
 
     private CheckstyleAuditListener addErrorToListener(AuditEvent auditEvent) {
