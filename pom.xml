@@ -93,13 +93,13 @@
   </ciManagement>
 
   <properties>
-    <checkstyle.version>13.4.1</checkstyle.version>
+    <checkstyle.version>13.4.2</checkstyle.version>
     <sonar.version>25.2.0.102705</sonar.version>
     <sonar.api-version>11.3.0.2824</sonar.api-version>
     <maven.sevntu.checkstyle.plugin.version>1.44.1</maven.sevntu.checkstyle.plugin.version>
     <!-- it should be a version of checkstyle that is compatible/compiled with sevntu -->
     <maven.sevntu.checkstyle.plugin.checkstyle.version>
-      13.4.1
+      13.4.2
     </maven.sevntu.checkstyle.plugin.checkstyle.version>
     <antrun.plugin.version>3.1.0</antrun.plugin.version>
     <checkstyle.configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyle.version}/config/checkstyle-checks.xml</checkstyle.configLocation>
@@ -110,32 +110,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- we disable ITs by default as it need download of 200MB sonar application jar -->
     <skipITs>true</skipITs>
+    <junit.jupiter.version>5.12.0</junit.jupiter.version>
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>com.fasterxml.staxmate</groupId>
-      <artifactId>staxmate</artifactId>
-      <version>2.4.1</version>
-      <scope>provided</scope>
-    </dependency>
-    <!-- required to load external descriptiona, see CheckstyleRulesDefinition -->
-    <dependency>
-      <groupId>org.sonarsource.sslr-squid-bridge</groupId>
-      <artifactId>sslr-squid-bridge</artifactId>
-      <version>2.7.1.392</version>
-      <!-- to avoid 4.5.1 api pickup -->
-      <exclusions>
-        <exclusion>
-          <groupId>org.codehaus.sonar</groupId>
-          <artifactId>sonar-plugin-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.codehaus.sonar</groupId>
-          <artifactId>sonar-colorizer</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
@@ -147,15 +125,20 @@
       <version>3.20.0</version>
     </dependency>
     <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.3.6</version>
-      <scope>provided</scope>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>1.15.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>33.6.0-jre</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <version>3.0.2</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.sonarsource.api.plugin</groupId>
@@ -180,21 +163,10 @@
       <artifactId>slf4j-api</artifactId>
       <version>2.0.17</version>
     </dependency>
-    <!--
-    We need following dependency, otherwise we will receive
-    java.lang.NoClassDefFoundError: org/apache/maven/project/MavenProject
-    during call mock(org.sonar.api.resources.Project.class)
-    -->
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-core</artifactId>
-      <version>3.9.15</version>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>3.12.4</version>
+      <version>5.6.0</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -210,46 +182,16 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>hamcrest-core</artifactId>
-          <groupId>org.hamcrest</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.sonarsource.sonarqube</groupId>
-      <artifactId>sonar-testing-harness</artifactId>
-      <scope>test</scope>
-      <version>${sonar.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.sonarsource.orchestrator</groupId>
-      <artifactId>sonar-orchestrator</artifactId>
-      <version>3.42.0.312</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>${junit.jupiter.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jcl-over-slf4j</artifactId>
-      <version>2.0.17</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit.jupiter.version}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>log4j-over-slf4j</artifactId>
-      <version>2.0.17</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.easytesting</groupId>
-      <artifactId>fest-assert</artifactId>
-      <scope>test</scope>
-      <version>1.4</version>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
@@ -258,22 +200,16 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.ant</groupId>
-      <artifactId>ant</artifactId>
-      <version>1.10.17</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.sonarsource.sonarqube</groupId>
-      <artifactId>sonar-ws</artifactId>
-      <version>${sonar.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.jacoco</groupId>
       <artifactId>org.jacoco.agent</artifactId>
       <version>${maven.jacoco.plugin.version}</version>
       <classifier>runtime</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.14.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -298,17 +234,18 @@
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-yaml</artifactId>
-      <version>2.21.2</version>
+      <version>2.21.3</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.21.2</version>
+      <version>2.21.3</version>
     </dependency>
     <dependency>
-      <groupId>org.reflections</groupId>
-      <artifactId>reflections</artifactId>
-      <version>0.10.2</version>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.2</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -324,31 +261,17 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
+        <version>3.15.0</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.4.0</version>
-        <executions>
-          <execution>
-            <id>add-test-source</id>
-            <phase>generate-test-sources</phase>
-            <goals>
-              <goal>add-test-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>src/it/java</source>
-              </sources>
-            </configuration>
-          </execution>
-        </executions>
+        <version>3.6.1</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <version>2.5</version>
+        <version>3.3.1</version>
         <configuration>
           <tagNameFormat>@{project.version}</tagNameFormat>
         </configuration>
@@ -356,8 +279,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.5.5</version>
         <configuration>
+          <argLine>-Dnet.bytebuddy.experimental=true</argLine>
           <systemPropertyVariables>
             <jacoco-agent.destfile>${project.build.directory}/jacoco.exec</jacoco-agent.destfile>
             <javax.xml.parsers.DocumentBuilderFactory>
@@ -373,9 +297,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.5.5</version>
         <configuration>
           <skipITs>${skipITs}</skipITs>
+          <environmentVariables>
+            <ARTIFACTORY_URL>https://repo1.maven.org/maven2</ARTIFACTORY_URL>
+          </environmentVariables>
           <includes>
             <include>org/checkstyle/**/*.java</include>
           </includes>
@@ -392,7 +319,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
-        <version>${antrun.plugin.version}</version>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <id>ant-phase-verify</id>
@@ -759,12 +686,12 @@
       <plugin>
         <groupId>edu.illinois</groupId>
         <artifactId>nondex-maven-plugin</artifactId>
-        <version>1.1.1</version>
+        <version>2.2.5</version>
       </plugin>
       <plugin>
         <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
         <artifactId>sonar-packaging-maven-plugin</artifactId>
-        <version>1.23.0.740</version>
+        <version>1.25.1.3002</version>
         <extensions>true</extensions>
         <configuration>
           <pluginKey>checkstyle</pluginKey>
@@ -785,7 +712,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.6.2</version>
         <executions>
           <execution>
             <id>enforce-jdk-maven-versions</id>
@@ -798,7 +725,7 @@
                   <version>${maven.compiler.release}</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
-                  <version>3.3.9</version>
+                  <version>3.6.3</version>
                 </requireMavenVersion>
               </rules>
             </configuration>
@@ -826,7 +753,7 @@
       <plugin>
         <groupId>org.sonarsource.scanner.maven</groupId>
         <artifactId>sonar-maven-plugin</artifactId>
-        <version>3.9.1.2184</version>
+        <version>5.6.0.6792</version>
       </plugin>
     </plugins>
   </build>
@@ -860,6 +787,70 @@
         <forbiddenapis.skip>true</forbiddenapis.skip>
         <maven.javadoc.skip>true</maven.javadoc.skip>
       </properties>
+    </profile>
+    <profile>
+      <id>integration-tests</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <skipITs>false</skipITs>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>org.sonarsource.orchestrator</groupId>
+          <artifactId>sonar-orchestrator-junit5</artifactId>
+          <version>6.1.0.3962</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.sonarsource.orchestrator</groupId>
+          <artifactId>sonar-orchestrator</artifactId>
+          <version>6.1.0.3962</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.sonarsource.orchestrator</groupId>
+          <artifactId>sonar-orchestrator-http</artifactId>
+          <version>6.1.0.3962</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.sonarsource.orchestrator</groupId>
+          <artifactId>sonar-orchestrator-build</artifactId>
+          <version>6.1.0.3962</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.sonarsource.orchestrator</groupId>
+          <artifactId>sonar-orchestrator-locators</artifactId>
+          <version>6.1.0.3962</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>3.6.1</version>
+            <executions>
+              <execution>
+                <id>add-it-source</id>
+                <phase>generate-test-sources</phase>
+                <goals>
+                  <goal>add-test-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>src/it/java</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>

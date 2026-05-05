@@ -19,19 +19,19 @@
 
 package org.sonar.plugins.checkstyle;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.internal.DefaultSensorDescriptor;
 
-public class CheckstyleSensorTest {
+class CheckstyleSensorTest {
 
     @Test
-    public void shouldDescribePluginCorrectly() {
+    void shouldDescribePluginCorrectly() {
         final DefaultSensorDescriptor descriptor = new DefaultSensorDescriptor();
         final CheckstyleSensor sensor = new CheckstyleSensor(null);
 
@@ -41,7 +41,7 @@ public class CheckstyleSensorTest {
     }
 
     @Test
-    public void shouldExecuteExecutorWithContext() {
+    void shouldExecuteExecutorWithContext() {
         final SensorContext context = mock(SensorContext.class);
         final CheckstyleExecutor executor = mock(CheckstyleExecutor.class);
 
@@ -52,7 +52,7 @@ public class CheckstyleSensorTest {
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertThat(new CheckstyleSensor(null).toString()).isEqualTo("CheckstyleSensor");
     }
 }

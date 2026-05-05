@@ -44,7 +44,8 @@ jobs:
           distribution: temurin
           cache: maven
 
-      - run: ./.ci/ci.sh package
+      - run: |
+          mvn -e --no-transfer-progress clean package -Pno-validations
 
       - uses: svenstaro/upload-release-action@v2
         with:

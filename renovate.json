@@ -74,5 +74,11 @@
     "enabledManagers": [
         "github-actions",
         "maven"
-    ]
+    ],
+    "maven": {
+        "fileMatch": [
+            "(^|/)pom\\.xml$",
+            "src/it/resources/integration-test-project/pom\\.xml$"
+        ]
+    }
 }

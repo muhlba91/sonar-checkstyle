@@ -19,18 +19,18 @@
 
 package org.sonar.plugins.checkstyle;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class CheckstyleSeverityUtilsTest {
+class CheckstyleSeverityUtilsTest {
 
     @Test
-    public void testToSeverityString() {
+    void testToSeverityString() {
         assertThat(CheckstyleSeverityUtils.toSeverity("BLOCKER")).isEqualTo("error");
         assertThat(CheckstyleSeverityUtils.toSeverity("CRITICAL")).isEqualTo("error");
         assertThat(CheckstyleSeverityUtils.toSeverity("MAJOR")).isEqualTo("warning");
@@ -39,10 +39,10 @@ public class CheckstyleSeverityUtilsTest {
     }
 
     @Test
-    public void testToSeverityWrongString() {
+    void testToSeverityWrongString() {
         try {
             CheckstyleSeverityUtils.toSeverity("nothing");
-            Assert.fail("IOException while writing should not be ignored");
+            Assertions.fail("IOException while writing should not be ignored");
         }
         catch (IllegalArgumentException exception) {
             assertThat(exception.getMessage()).isEqualTo("Priority not supported: nothing");
@@ -50,7 +50,7 @@ public class CheckstyleSeverityUtilsTest {
     }
 
     @Test
-    public void privateConstructor() throws ReflectiveOperationException {
+    void privateConstructor() throws ReflectiveOperationException {
         final Constructor<CheckstyleSeverityUtils> constructor = CheckstyleSeverityUtils.class
                 .getDeclaredConstructor();
 

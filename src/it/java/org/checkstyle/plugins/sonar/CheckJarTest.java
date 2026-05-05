@@ -19,7 +19,7 @@
 
 package org.checkstyle.plugins.sonar;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,20 +29,20 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.function.BiPredicate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class CheckJarTest {
+class CheckJarTest {
     private static final String MATCHER = ".*checkstyle-sonar-plugin-"
                                           + "\\d+\\.\\d+(.\\d+)?(-SNAPSHOT)?\\.jar";
 
     @Test
-    public void testJarPresence() throws IOException {
+    void testJarPresence() throws IOException {
         final BiPredicate<Path, BasicFileAttributes> matcher = (path, basicFileAttributes) -> {
             return path.toString()
                     .matches(MATCHER);
         };
         final List<Path> files = Files.find(Paths.get("target"), 1, matcher)
                 .toList();
-        assertFalse("Jar should exists", files.isEmpty());
+        assertFalse(files.isEmpty(), "Jar should exists");
     }
 }

@@ -33,11 +33,10 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
-import org.fest.assertions.Assertions;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.sonar.api.batch.rule.ActiveRule;
 import org.sonar.api.batch.rule.ActiveRules;
@@ -49,7 +48,7 @@ import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.System2;
 
-public class CheckstyleProfileExporterTest {
+class CheckstyleProfileExporterTest {
 
     private final ActiveRule testActiveRule = new TestActiveRule(
                     RuleKey.of(CheckstyleConstants.REPOSITORY_KEY,
@@ -58,20 +57,20 @@ public class CheckstyleProfileExporterTest {
 
     private Configuration settings;
 
-    @Before
-    public void prepare() {
+    @BeforeEach
+    void prepare() {
         initSettings(null, null);
         System.setProperty("javax.xml.transform.TransformerFactory",
                 "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         System.setProperty("javax.xml.transform.TransformerFactory", "");
     }
 
     @Test
-    public void noCheckstyleActiveRulesToExport() {
+    void noCheckstyleActiveRulesToExport() {
         final ActiveRules activeRules = Mockito.mock(ActiveRules.class);
         Mockito.when(activeRules.findByRepository(CheckstyleConstants.REPOSITORY_KEY))
                 .thenReturn(Collections.emptyList());
@@ -86,7 +85,7 @@ public class CheckstyleProfileExporterTest {
     }
 
     @Test
-    public void singleCheckstyleActiveRulesToExport() {
+    void singleCheckstyleActiveRulesToExport() {
         final ActiveRules activeRules = Mockito.mock(ActiveRules.class);
         Mockito.when(activeRules.findByRepository(CheckstyleConstants.REPOSITORY_KEY))
                 .thenReturn(Collections.singletonList(testActiveRule));
@@ -101,7 +100,7 @@ public class CheckstyleProfileExporterTest {
     }
 
     @Test
-    public void treewalkerCheckstyleActiveRulesToExport() {
+    void treewalkerCheckstyleActiveRulesToExport() {
         final ActiveRules activeRules = Mockito.mock(ActiveRules.class);
         Mockito.when(activeRules.findByRepository(CheckstyleConstants.REPOSITORY_KEY))
                 .thenReturn(Collections.singletonList(new TestActiveRule(
@@ -119,7 +118,7 @@ public class CheckstyleProfileExporterTest {
     }
 
     @Test
-    public void sameCheckstyleActiveRulesToExport() {
+    void sameCheckstyleActiveRulesToExport() {
         final List<ActiveRule> rules = new ArrayList<>();
         rules.add(testActiveRule);
         rules.add(new TestActiveRule(RuleKey.of(CheckstyleConstants.REPOSITORY_KEY,
@@ -139,7 +138,7 @@ public class CheckstyleProfileExporterTest {
     }
 
     @Test
-    public void noCheckstyleTemplateActiveRulesToExport() {
+    void noCheckstyleTemplateActiveRulesToExport() {
         final ActiveRules activeRules = Mockito.mock(ActiveRules.class);
         Mockito.when(activeRules.findByRepository(CheckstyleConstants.REPOSITORY_KEY))
                 .thenReturn(Collections.singletonList(new TestActiveRule(
@@ -157,7 +156,7 @@ public class CheckstyleProfileExporterTest {
     }
 
     @Test
-    public void blankParamCheckstyleActiveRulesToExport() {
+    void blankParamCheckstyleActiveRulesToExport() {
         final ActiveRules activeRules = Mockito.mock(ActiveRules.class);
         Mockito.when(activeRules.findByRepository(CheckstyleConstants.REPOSITORY_KEY))
                 .thenReturn(Collections.singletonList(new TestActiveRule(
@@ -175,11 +174,12 @@ public class CheckstyleProfileExporterTest {
     }
 
     @Test
-    public void activeRulesThrowsException() {
+    void activeRulesThrowsException() {
         try {
             new CheckstyleProfileExporter(settings).exportProfile(
                     new DefaultActiveRules(Collections.emptyList()), new IoExceptionWriter());
-            Assert.fail("IOException while writing should not be ignored");
+            org.junit.jupiter.api.Assertions
+                    .fail("IOException while writing should not be ignored");
         }
         catch (IllegalStateException exception) {
             Assertions.assertThat(exception.getMessage()).isEqualTo("Fail to export active rules.");
@@ -187,7 +187,7 @@ public class CheckstyleProfileExporterTest {
     }
 
     @Test
-    public void addCustomCheckerFilters() {
+    void addCustomCheckerFilters() {
         initSettings(CheckstyleConstants.CHECKER_FILTERS_KEY,
                 "<module name=\"SuppressionCommentFilter\">"
                         + "<property name=\"offCommentFormat\" value=\"BEGIN GENERATED CODE\"/>"
@@ -210,7 +210,7 @@ public class CheckstyleProfileExporterTest {
     }
 
     @Test
-    public void addCustomTreewalkerFilters() {
+    void addCustomTreewalkerFilters() {
         initSettings(CheckstyleConstants.TREEWALKER_FILTERS_KEY,
                 "<module name=\"SuppressWithNearbyCommentFilter\"/>");
 
@@ -226,7 +226,7 @@ public class CheckstyleProfileExporterTest {
     }
 
     @Test
-    public void addTabWidthProperty() {
+    void addTabWidthProperty() {
         initSettings(CheckstyleConstants.CHECKER_TAB_WIDTH, "8");
 
         final ActiveRules activeRules = Mockito.mock(ActiveRules.class);
